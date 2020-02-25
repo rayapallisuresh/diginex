@@ -8,8 +8,10 @@ app = Flask(__name__)
 def api():
   if(request.method == 'POST'):
     request_json = request.get_json()
+    print(request_json) 
     request_json['message'] = get_reverse(request_json['message'])
     request_json['rand'] = random.random()
+    request_json['version'] = 'v1'
     return request_json, 200
 
 def get_reverse(input_string='spOveD'):
@@ -18,9 +20,10 @@ def get_reverse(input_string='spOveD'):
     print(request_json) 
     headers = {'Content-type': 'application/json'}
     reverse_service = os.getenv('REVERSE_SERVICE', 'http://127.0.0.1:5000')
+    print("calling reverse service at : " + reverse_service)
     response = requests.post(reverse_service + '/reverse',data=json.dumps(request_json), headers=headers)
     response_json = response.json()
     return response_json['message']
   
 if __name__ == '__main__':
-  app.run(debug=True, port=8080, host='0.0.0.0')
+  app.run(debug=True, port=5001, host='0.0.0.0')
